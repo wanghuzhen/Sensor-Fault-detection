@@ -83,13 +83,17 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
     return history
 
 
-if __name__ == '__main__':
+def train_predict():
     X_train_scaled, y_train, X_test_scaled, y_test = get_data()
-    history = model_train(5, X_train_scaled, y_train, X_test_scaled, y_test)
+    # history = model_train(5, X_train_scaled, y_train, X_test_scaled, y_test)
     model = tf.keras.models.load_model('data&model/Rnn_model.h5')
     l1 = np.array(model.predict(X_test_scaled))
     l2 = np.array(y_test)
     print(l1-l2)
+
+
+if __name__ == '__main__':
+    train_predict()
     # def plot_learning_curver(history):
     #     pd.DataFrame(history.history).plot(figsize = (10, 8))
     #     plt.grid(True)

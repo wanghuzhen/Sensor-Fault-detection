@@ -1,16 +1,17 @@
 # @File    :   RNN_model.py
-# @Version :   1.5
+# @Version :   1.5.2
 # @Author  :   Wang Huzhen
 # @Email   :   2327253081@qq.com
 # @Time    :   2020/04/15 18:00:20
+import os
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
 import tensorflow as tf
 from tensorflow import keras
 from sensor_read import read_data
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.preprocessing import StandardScaler
-import pandas as pd
-import os
+np.set_printoptions(threshold=np.inf)
 
 
 # 获取数据集合并归一化处理

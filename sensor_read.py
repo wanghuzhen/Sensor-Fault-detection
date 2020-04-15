@@ -1,11 +1,12 @@
 # @File    :   sensor_read.py
-# @Version :   1.2
+# @Version :   1.2.2
 # @Author  :   Wang Huzhen
 # @Email   :   2327253081@qq.com
 # @Time    :   2020/04/02
 # import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+np.set_printoptions(threshold=np.inf)
 
 
 def read_data():  # 读取训练数据
@@ -32,5 +33,6 @@ if __name__ == '__main__':
     print(X_train.shape)
     # print(X_train)
     print(X_test.shape)
+    print(X_test)
     # print(y_test.shape)
     # print(type(X_train[1][1]))

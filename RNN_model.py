@@ -1,5 +1,5 @@
 # @File    :   RNN_model.py
-# @Version :   1.5.2
+# @Version :   1.5.3
 # @Author  :   Wang Huzhen
 # @Email   :   2327253081@qq.com
 # @Time    :   2020/04/15 18:00:20
@@ -84,7 +84,9 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
     return history
 
 
-def train_predict():
+# 使用的数据集是原数据集分割出来的
+# 训练后的模型进行预测和评估，返回值是预测值和实际值的差值
+def train_predict_evalute():
     X_train_scaled, y_train, X_test_scaled, y_test = get_data()
     # history = model_train(5, X_train_scaled, y_train, X_test_scaled, y_test)
     model = tf.keras.models.load_model('data&model/Rnn_model.h5')
@@ -93,14 +95,20 @@ def train_predict():
     return (l1-l2)
 
 
-if __name__ == '__main__':
-    result = train_predict()
-    # print(result[:, 0].tolist())
-    plt.plot(result[:, 0].tolist())
-    plt.show()
-    # def plot_learning_curver(history):
-    #     pd.DataFrame(history.history).plot(figsize = (10, 8))
-    #     plt.grid(True)
-    #     plt.gca().set_ylim(0, 1)
+# 预测测试集，使用的数据集是正式有故障的数据集
+def pre(data_path):
+    x_test, y_test = read_testdata(data_path)
+    scaler = StandardScaler()
+    x_test_scaled = scaler.transform(x_test)
+    model = tf.keras.models.load_model('data&model/Rnn_model.h5')
+    l1 = np.array(model.predict(x_test_scaled))
+    l2 = np.array(y_test)
+    return (l1-l2)
 
-    # plot_learning_curver(history)
+
+if __name__ == '__main__':
+    # result = train_predict_evalute()
+    result = pre()
+    # print(result[:, 0].tolist())
+    # plt.plot(result[:, 0].tolist())
+    # plt.show()

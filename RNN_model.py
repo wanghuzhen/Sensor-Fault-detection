@@ -14,17 +14,18 @@ import numpy as np
 np.set_printoptions(threshold=np.inf)
 
 
-scaler = StandardScaler()
-
-
 # 获取数据集合并归一化处理
-def get_data():
-    (X_train, y_train), (X_test, y_test) = read_data()
-    test = np.column_stack((X_test, y_test))
-    np.savetxt('data&model/sensor_test_3.csv', test, delimiter=',')
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
-    return X_train_scaled, y_train, X_test_scaled, y_test
+def get_data(data_path=''):
+    scaler = StandardScaler()
+    if data_path is '':
+        (X_train, y_train), (X_test, y_test) = read_data()
+        X_train_scaled = scaler.fit_transform(X_train)
+        X_test_scaled = scaler.transform(X_test)
+        return X_train_scaled, y_train, X_test_scaled, y_test
+    else:
+        x_test, y_test = read_testdata(data_path)
+        x_test_scaled = scaler.fit_transform(x_test)
+        return x_test_scaled, y_test
 
 
 # 创建模型
@@ -102,8 +103,7 @@ def train_predict_evalute():
 
 # 预测测试集，使用的数据集是正式有故障的数据集
 def pre(data_path):
-    x_test, y_test = read_testdata(data_path)
-    x_test_scaled = scaler.fit_transform(x_test)
+    x_test_scaled, y_test = get_data(data_path)
     model = tf.keras.models.load_model('data&model/Rnn_model.h5')
     l1 = np.array(model.predict(x_test_scaled))
     l2 = np.array(y_test)
@@ -114,6 +114,6 @@ def pre(data_path):
 if __name__ == '__main__':
     # result = train_predict_evalute()
     result = pre('data&model/sensor_test_3.csv')
-    print(result[:, 0].tolist())
+    print(result[:, 2].tolist())
     # plt.plot(result[:, 0].tolist())
     # plt.show()

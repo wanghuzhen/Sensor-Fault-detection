@@ -28,8 +28,8 @@ def read_data():  # 读取训练数据
 def read_testdata(path):  # 读取测试集数据
     sensor_data = np.loadtxt(
         open(path), delimiter=",", skiprows=1)
-    X, y = sensor_data[1:, list(
-        range(0, 7))], sensor_data[1:, list(range(7, 11))]
+    X, y = sensor_data[1:51, list(
+        range(0, 7))], sensor_data[1:51, list(range(7, 11))]
     return X, y
 
 
@@ -38,9 +38,10 @@ if __name__ == '__main__':
     x, y = read_testdata('data&model/sensor_test.csv')
     # X_train = np.array(X_train)
     # Y_train = np.array(Y_train)
-    print(X_train.shape)
+    print(X_test)
     # print(X_train)
-    print(X_test.shape)
+    # print(X_test.shape)
+    print('=================')
     print(x)
     # print(y_test.shape)
     # print(type(X_train[1][1]))

@@ -90,11 +90,14 @@ def train_predict():
     model = tf.keras.models.load_model('data&model/Rnn_model.h5')
     l1 = np.array(model.predict(X_test_scaled))
     l2 = np.array(y_test)
-    print(l1-l2)
+    return (l1-l2)
 
 
 if __name__ == '__main__':
-    train_predict()
+    result = train_predict()
+    # print(result[:, 0].tolist())
+    plt.plot(result[:, 0].tolist())
+    plt.show()
     # def plot_learning_curver(history):
     #     pd.DataFrame(history.history).plot(figsize = (10, 8))
     #     plt.grid(True)

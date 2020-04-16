@@ -8,16 +8,20 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import tensorflow as tf
 from tensorflow import keras
-from sensor_read import read_data
+from sensor_read import read_data, read_testdata
 import matplotlib.pyplot as plt
 import numpy as np
 np.set_printoptions(threshold=np.inf)
 
 
+scaler = StandardScaler()
+
+
 # 获取数据集合并归一化处理
 def get_data():
     (X_train, y_train), (X_test, y_test) = read_data()
-    scaler = StandardScaler()
+    test = np.column_stack((X_test, y_test))
+    np.savetxt('data&model/sensor_test_3.csv', test, delimiter=',')
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
     return X_train_scaled, y_train, X_test_scaled, y_test
@@ -92,23 +96,24 @@ def train_predict_evalute():
     model = tf.keras.models.load_model('data&model/Rnn_model.h5')
     l1 = np.array(model.predict(X_test_scaled))
     l2 = np.array(y_test)
+    del model
     return (l1-l2)
 
 
 # 预测测试集，使用的数据集是正式有故障的数据集
 def pre(data_path):
     x_test, y_test = read_testdata(data_path)
-    scaler = StandardScaler()
-    x_test_scaled = scaler.transform(x_test)
+    x_test_scaled = scaler.fit_transform(x_test)
     model = tf.keras.models.load_model('data&model/Rnn_model.h5')
     l1 = np.array(model.predict(x_test_scaled))
     l2 = np.array(y_test)
+    del model
     return (l1-l2)
 
 
 if __name__ == '__main__':
     # result = train_predict_evalute()
-    result = pre()
-    # print(result[:, 0].tolist())
+    result = pre('data&model/sensor_test_3.csv')
+    print(result[:, 0].tolist())
     # plt.plot(result[:, 0].tolist())
     # plt.show()

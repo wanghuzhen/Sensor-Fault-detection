@@ -28,8 +28,8 @@ def read_data():  # 读取训练数据
 def read_testdata(path):  # 读取测试集数据
     sensor_data = np.loadtxt(
         open(path), delimiter=",", skiprows=1)
-    X, y = sensor_data[1:51, list(
-        range(0, 7))], sensor_data[1:51, list(range(7, 11))]
+    X, y = sensor_data[0:, list(
+        range(0, 7))], sensor_data[0:, list(range(7, 11))]
     return X, y
 
 

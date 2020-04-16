@@ -113,7 +113,7 @@ def pre(data_path):
 
 if __name__ == '__main__':
     # result = train_predict_evalute()
-    result = pre('data&model/sensor_test_3.csv')
-    print(result[:, 2].tolist())
+    result = pre('data&model/sensor_test_1.csv')
+    print(result[:, 0].tolist())
     # plt.plot(result[:, 0].tolist())
     # plt.show()

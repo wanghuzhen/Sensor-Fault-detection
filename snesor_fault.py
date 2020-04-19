@@ -1,5 +1,5 @@
 # @File    :   snesor_fault.py
-# @Version :   1.0
+# @Version :   2.1
 # @Author  :   Wang Huzhen
 # @Email   :   2327253081@qq.com
 # @Time    :   2020/04/09 09:45:06
@@ -65,15 +65,26 @@ def Sensor_Fault_Detection(list_estimate, list_actual, mean_err):
                 return 4
 
 
-if __name__ == "__main__":
+def fault():
+    fault_str = ''
     fault_type = Sensor_Fault_Detection()  # 故障判断，未输入估计值实际值
     if fault_type == 0:
-        print('无故障')
+        fault_str = '无故障'
+        # print('无故障')
     elif fault_type == 1:
-        print('完全故障')
+        fault_str = '完全故障'
+        # print('完全故障')
     elif fault_type == 2:
-        print('固定偏差')
+        fault_str = '固定偏差'
+        # print('固定偏差')
     elif fault_type == 3:
-        print('恒增益')
+        fault_str = '恒增益'
+        # print('恒增益')
     else:
-        print('精度下降')
+        fault_str = '精度下降'
+        # print('精度下降')
+    return fault_str
+
+
+if __name__ == "__main__":
+    print(fault())

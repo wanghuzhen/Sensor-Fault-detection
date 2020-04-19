@@ -111,22 +111,26 @@ def pre(data_path):
     return l1, l2
 
 
+# 显示数据图像
+def draw_picture(res, act):
+    for i in range(4):
+        res = result[:, i].tolist()
+        act = actuall[:, i].tolist()
+        plt.figure('Sensor'+str(i+1))
+        plt.title('Sensor'+str(i+1))
+        plt.rcParams['font.sans-serif'] = ['SimHei']
+        plt.plot(res, label='估计值--平均值：'+str(round(sum(res)/len(res), 4)))
+        plt.plot(act, label='实际值--平均值：'+str(round(sum(act)/len(act), 4)))
+        plt.legend(loc='best')
+        plt.xlabel('time')
+        plt.ylabel('angel_rate')
+        plt.savefig('Sensor'+str(i+1)+'.png')
+    plt.show()
+
+
 if __name__ == '__main__':
     # result = train_predict_evalute()
     result, actuall = pre('data&model/sensor_test_1.csv')
-    # for i in range(4):
-    #     res = result[:, i].tolist()
-    #     act = actuall[:, i].tolist()
-    #     plt.figure('Sensor'+str(i+1))
-    #     plt.title('Sensor'+str(i+1))
-    #     plt.rcParams['font.sans-serif'] = ['SimHei']
-    #     plt.plot(res, label='估计值--平均值：'+str(round(sum(res)/len(res), 4)))
-    #     plt.plot(act, label='实际值--平均值：'+str(round(sum(act)/len(act), 4)))
-    #     plt.legend(loc='best')
-    #     plt.xlabel('time')
-    #     plt.ylabel('angel_rate')
-    #     plt.savefig('Sensor'+str(i+1)+'.png')
-    # plt.show()
     print(result.tolist())
     print('======================')
     print(actuall.tolist())

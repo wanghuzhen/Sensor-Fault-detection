@@ -4,7 +4,7 @@
 # @Email   :   2327253081@qq.com
 # @Time    :   2020/04/09 09:45:06
 import numpy as np
-from RNN_model import pre
+from RNN_model import pre, draw_picture
 
 
 def avg(list1):
@@ -76,6 +76,12 @@ def Threshold(list_estimate, list_actual, snesor_id):
     return threshold
 
 
+# 故障植入，仿真故障，生成故障数据
+def fault_insertion(actual_value):
+    # TODO
+    return 0
+
+
 # 输出故障名称
 def fault(list_estimate, list_actual, snesor_id):
     max_dvalue = Threshold(list_estimate, list_actual, snesor_id)
@@ -103,8 +109,10 @@ def fault(list_estimate, list_actual, snesor_id):
 
 
 if __name__ == "__main__":
-    result, actuall = pre('data&model/sensor_test_1.csv')
+    result, actual = pre('data&model/sensor_test_1.csv')
+    # draw_picture(result, actuall)  # 绘制原始数据图像
+    actual = fault_insertion(actual)
     snesor_id = 1
     # l1 = result[:, 0].tolist()
     # l2 = actuall[:, 0].tolist()
-    print(fault(result, actuall, snesor_id))
+    print(fault(result, actual, snesor_id))

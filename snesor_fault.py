@@ -67,20 +67,20 @@ def Sensor_Fault_Detection(list_estimate, list_actual, max_dvalue):
 
 
 # 阈值计算
-def Threshold(list_estimate, list_actual):
+def Threshold(list_estimate, list_actual, snesor_id):
     d_value = list_actual - list_estimate
     threshold = 0
-    for i in d_value[:, 1].tolist():
+    for i in d_value[:, snesor_id].tolist():
         if threshold < abs(i):
             threshold = abs(i)
     return threshold
 
 
 # 输出故障名称
-def fault(list_estimate, list_actual):
-    max_dvalue = Threshold(list_estimate, list_actual)
-    l1 = list_estimate[:, 1].tolist()
-    l2 = list_actual[:, 1].tolist()
+def fault(list_estimate, list_actual, snesor_id):
+    max_dvalue = Threshold(list_estimate, list_actual, snesor_id)
+    l1 = list_estimate[:, snesor_id].tolist()
+    l2 = list_actual[:, snesor_id].tolist()
     fault_str = ''
     fault_type = Sensor_Fault_Detection(
         l1, l2, max_dvalue)  # 故障判断，未输入估计值实际值
@@ -104,6 +104,7 @@ def fault(list_estimate, list_actual):
 
 if __name__ == "__main__":
     result, actuall = pre('data&model/sensor_test_1.csv')
+    snesor_id = 1
     # l1 = result[:, 0].tolist()
     # l2 = actuall[:, 0].tolist()
-    print(fault(result, actuall))
+    print(fault(result, actuall, snesor_id))

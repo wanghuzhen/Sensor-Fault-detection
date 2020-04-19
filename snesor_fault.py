@@ -1,9 +1,10 @@
 # @File    :   snesor_fault.py
-# @Version :   2.1
+# @Version :   2.2
 # @Author  :   Wang Huzhen
 # @Email   :   2327253081@qq.com
 # @Time    :   2020/04/09 09:45:06
 import numpy as np
+from RNN_model import pre
 
 
 def avg(list1):
@@ -32,14 +33,14 @@ def Least_Square_Method(list_x, list_y):
 
 # 输入传感器估计值，实际值和神经网络预测误差
 # 判断是否存在故障
-def Sensor_Fault_Detection(list_estimate, list_actual, mean_err):
-    threshold = mean_err
+def Sensor_Fault_Detection(list_estimate, list_actual, max_dvalue):
+    threshold = max_dvalue  # 使用最大残差值作为阈值
     list_est = np.array(list_estimate)
     list_act = np.array(list_actual)
     list_e = list_est - list_act  # 传感器估计值与实际值的残差
     fault = False  # 初始设置为没有错误
     for i in list_e:
-        if abs(i) >= mean_err:
+        if abs(i) > max_dvalue:
             fault = 1
             break
     if not fault:
@@ -65,9 +66,24 @@ def Sensor_Fault_Detection(list_estimate, list_actual, mean_err):
                 return 4
 
 
-def fault():
+# 阈值计算
+def Threshold(list_estimate, list_actual):
+    d_value = list_actual - list_estimate
+    threshold = 0
+    for i in d_value[:, 1].tolist():
+        if threshold < abs(i):
+            threshold = abs(i)
+    return threshold
+
+
+# 输出故障名称
+def fault(list_estimate, list_actual):
+    max_dvalue = Threshold(list_estimate, list_actual)
+    l1 = list_estimate[:, 1].tolist()
+    l2 = list_actual[:, 1].tolist()
     fault_str = ''
-    fault_type = Sensor_Fault_Detection()  # 故障判断，未输入估计值实际值
+    fault_type = Sensor_Fault_Detection(
+        l1, l2, max_dvalue)  # 故障判断，未输入估计值实际值
     if fault_type == 0:
         fault_str = '无故障'
         # print('无故障')
@@ -87,4 +103,7 @@ def fault():
 
 
 if __name__ == "__main__":
-    print(fault())
+    result, actuall = pre('data&model/sensor_test_1.csv')
+    # l1 = result[:, 0].tolist()
+    # l2 = actuall[:, 0].tolist()
+    print(fault(result, actuall))

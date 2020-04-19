@@ -114,17 +114,17 @@ def pre(data_path):
 if __name__ == '__main__':
     # result = train_predict_evalute()
     result, actuall = pre('data&model/sensor_test_1.csv')
-    for i in range(4):
-        plt.figure('Sensor'+str(i))
-        plt.rcParams['font.sans-serif'] = ['SimHei']
-        plt.plot(result[:, i].tolist(), label='估计值')
-        plt.plot(actuall[:, i].tolist(), label='实际值')
-        plt.legend(loc='best')
-        plt.xlabel('time')
-        plt.ylabel('angel_rate')
-    plt.show()
-    # print(result[:, 0].tolist())
-    # print('======================')
-    # print(actuall[:, 0].tolist())
+    # for i in range(4):
+    #     plt.figure('Sensor'+str(i))
+    #     plt.rcParams['font.sans-serif'] = ['SimHei']
+    #     plt.plot(result[:, i].tolist(), label='估计值')
+    #     plt.plot(actuall[:, i].tolist(), label='实际值')
+    #     plt.legend(loc='best')
+    #     plt.xlabel('time')
+    #     plt.ylabel('angel_rate')
+    # plt.show()
+    print(result.tolist())
+    print('======================')
+    print(actuall.tolist())
     # plt.plot(result[:, 0].tolist())
     # plt.show()

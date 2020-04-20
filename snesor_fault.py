@@ -58,8 +58,8 @@ def Sensor_Fault_Detection(list_estimate, list_actual, max_dvalue):
         if Stuck_fault:  # 卡死故障/完全故障
             return 1
         a, b = Least_Square_Method(list_estimate, list_actual)
-        if abs(a-1) <= 0.001:
-            if b > 0:
+        if abs(a-1) <= 0.01:  # 之所以设置这个大小是忽略最小二乘法拟合时的误差与本身就存在的预测值的误差
+            if b > 0.01:
                 return 2
             if a-1 > 0:
                 return 3

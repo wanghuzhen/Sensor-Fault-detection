@@ -143,4 +143,3 @@ if __name__ == "__main__":
     sensor_type['Sensor4'] = fault(result, actual, 3)
     # draw_picture(result, actual, sensor_type)  # 绘制原始数据图像
     print(sensor_type)
-    

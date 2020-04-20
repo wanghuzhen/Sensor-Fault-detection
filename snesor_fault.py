@@ -1,10 +1,11 @@
 # @File    :   snesor_fault.py
-# @Version :   2.2
+# @Version :   2.3
 # @Author  :   Wang Huzhen
 # @Email   :   2327253081@qq.com
 # @Time    :   2020/04/09 09:45:06
 import numpy as np
 from RNN_model import pre, draw_picture
+import random
 
 
 def avg(list1):
@@ -78,8 +79,23 @@ def Threshold(list_estimate, list_actual, snesor_id):
 
 # 故障植入，仿真故障，生成故障数据
 def fault_insertion(actual_value):
-    # TODO
-    return 0
+    # 传感器故障插入结果，传感器一:卡死故障/完全故障;传感器二:恒增益故障;传感器三:固定偏差;传感器四:精度下降;
+    # 插入卡死故障，从某一时刻开始后面值全固定
+    max_value = max(actual_value[:, 0].tolist())  # max和min是为了固定值取在最大值和最小值间
+    min_value = min(actual_value[:, 0].tolist())
+    actual[19:, 0] = random.uniform(min_value, max_value)
+    # 插入恒增益或精度下降故障，muti[1, 1]的值大于1为传感器2插入恒增益，muti[3, 3]小于1为传感器4插入精度下降
+    muti = np.eye(4, dtype=float)
+    muti[1, 1] = 2.
+    muti[3, 3] = 0.8
+    actual = np.matmul(actual, muti)
+    # 插入固定偏差故障
+    bias = np.zeros((49, 4))
+    for i in range(bias.shape[0]):
+        bias[i][2] = 4.
+    actual = actual+bias
+    # print(bias)
+    return actual
 
 
 # 输出故障名称

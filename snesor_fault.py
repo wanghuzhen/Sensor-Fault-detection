@@ -39,7 +39,7 @@ def Sensor_Fault_Detection(list_estimate, list_actual, max_dvalue):
     list_est = np.array(list_estimate)
     list_act = np.array(list_actual)
     list_e = list_est - list_act  # 传感器估计值与实际值的残差
-    fault = False  # 初始设置为没有错误
+    fault = 0  # 初始设置为没有错误
     for i in list_e:
         if abs(i) > max_dvalue:
             fault = 1
@@ -47,14 +47,14 @@ def Sensor_Fault_Detection(list_estimate, list_actual, max_dvalue):
     if not fault:
         return 0
     else:
-        # 此处未实现各类故障判断
-        Stuck_fault = True  # 初始设置为存在卡死故障
+        # 此处实现各类故障判断
+        Stuck_fault = 0
         D_value = []
-        for k in range(len(list_actual)-1):
+        for k in range(20,len(list_actual)-1):
             D_value.append(list_actual[k]-list_actual[k+1])
             if abs(D_value[k]) >= 0.1:
                 # 阈值参考具体参数
-                Stuck_fault = False
+                Stuck_fault = 1
         if Stuck_fault:  # 卡死故障/完全故障
             return 1
         a, b = Least_Square_Method(list_estimate, list_actual)
@@ -83,24 +83,25 @@ def fault_insertion(actual_value):
     # 插入卡死故障，从某一时刻开始后面值全固定
     max_value = max(actual_value[:, 0].tolist())  # max和min是为了固定值取在最大值和最小值间
     min_value = min(actual_value[:, 0].tolist())
-    actual[19:, 0] = random.uniform(min_value, max_value)
+    actual_value[19:, 0] = random.uniform(min_value, max_value)
     # 插入恒增益或精度下降故障，muti[1, 1]的值大于1为传感器2插入恒增益，muti[3, 3]小于1为传感器4插入精度下降
     muti = np.eye(4, dtype=float)
     muti[1, 1] = 2.
     muti[3, 3] = 0.8
-    actual = np.matmul(actual, muti)
+    actual_value = np.matmul(actual_value, muti)
     # 插入固定偏差故障
     bias = np.zeros((49, 4))
     for i in range(bias.shape[0]):
         bias[i][2] = 4.
-    actual = actual+bias
+    actual_value = actual_value+bias
     # print(bias)
-    return actual
+    return actual_value
 
 
 # 输出故障名称
 def fault(list_estimate, list_actual, snesor_id):
     max_dvalue = Threshold(list_estimate, list_actual, snesor_id)
+    list_actual = fault_insertion(list_actual)  # 插入故障进行识别
     l1 = list_estimate[:, snesor_id].tolist()
     l2 = list_actual[:, snesor_id].tolist()
     fault_str = ''
@@ -127,8 +128,7 @@ def fault(list_estimate, list_actual, snesor_id):
 if __name__ == "__main__":
     result, actual = pre('data&model/sensor_test_1.csv')
     # draw_picture(result, actuall)  # 绘制原始数据图像
-    actual = fault_insertion(actual)
-    snesor_id = 1
+    snesor_id = 0
     # l1 = result[:, 0].tolist()
     # l2 = actuall[:, 0].tolist()
     print(fault(result, actual, snesor_id))

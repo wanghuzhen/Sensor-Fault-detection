@@ -114,8 +114,8 @@ def pre_DNN(data_path):
 # 显示数据图像
 def draw_picture_DNN(res, act, sensor_type):
     for i in range(4):
-        res = result[:, i].tolist()
-        act = actuall[:, i].tolist()
+        res = res[:, i].tolist()
+        act = act[:, i].tolist()
         plt.figure('Sensor'+str(i+1))
         plt.title('Sensor'+str(i+1)+sensor_type['Sensor'+str(i+1)])
         plt.rcParams['font.sans-serif'] = ['SimHei']

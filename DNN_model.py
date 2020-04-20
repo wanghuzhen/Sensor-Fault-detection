@@ -67,12 +67,12 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
     # 获取训练集shape
     X_shape = X_train_scaled.shape[1:]
     # print(X_shape)
-    if os.path.exists('data&model/Rnn_model.h5'):
-        restored_model = tf.keras.models.load_model('data&model/Rnn_model.h5')
+    if os.path.exists('data&model/Dnn_model.h5'):
+        restored_model = tf.keras.models.load_model('data&model/Dnn_model.h5')
         history = restored_model.fit(X_train_scaled, y_train, validation_data=(
             X_test_scaled, y_test), epochs=epoch)
         # 保存训练模型的权重和偏置
-        restored_model.save('data&model/Rnn_model.h5')
+        restored_model.save('data&model/Dnn_model.h5')
         # 删除模型
         del restored_model
     else:
@@ -83,7 +83,7 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
         history = model.fit(X_train_scaled, y_train, validation_data=(
             X_test_scaled, y_test), epochs=epoch)
         # 保存训练模型的权重和偏置
-        model.save('data&model/Rnn_model.h5')
+        model.save('data&model/Dnn_model.h5')
         # 删除模型
         del model
     return history
@@ -94,7 +94,7 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
 def train_predict_evalute():
     X_train_scaled, y_train, X_test_scaled, y_test = get_data()
     # history = model_train(5, X_train_scaled, y_train, X_test_scaled, y_test)
-    model = tf.keras.models.load_model('data&model/Rnn_model.h5')
+    model = tf.keras.models.load_model('data&model/Dnn_model.h5')
     l1 = np.array(model.predict(X_test_scaled))
     l2 = np.array(y_test)
     del model
@@ -104,7 +104,7 @@ def train_predict_evalute():
 # 预测测试集，使用的数据集是正式有故障的数据集
 def pre_DNN(data_path):
     x_test_scaled, y_test = get_data(data_path)
-    model = tf.keras.models.load_model('data&model/Rnn_model.h5')
+    model = tf.keras.models.load_model('data&model/Dnn_model.h5')
     l1 = np.array(model.predict(x_test_scaled))
     l2 = np.array(y_test)
     del model

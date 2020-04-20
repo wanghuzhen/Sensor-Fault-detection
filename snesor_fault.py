@@ -39,7 +39,7 @@ def Sensor_Fault_Detection(list_estimate, list_actual, max_dvalue):
     list_est = np.array(list_estimate)
     list_act = np.array(list_actual)
     list_e = list_est - list_act  # 传感器估计值与实际值的残差
-    fault = 0  # 初始设置为没有错误
+    fault = False  # 初始设置为没有错误
     for i in list_e:
         if abs(i) > max_dvalue:
             fault = 1
@@ -48,18 +48,18 @@ def Sensor_Fault_Detection(list_estimate, list_actual, max_dvalue):
         return 0
     else:
         # 此处实现各类故障判断
-        Stuck_fault = 0
-        D_value = []
-        for k in range(20,len(list_actual)-1):
-            D_value.append(list_actual[k]-list_actual[k+1])
-            if abs(D_value[k]) >= 0.1:
+        Stuck_fault = 1  # 设完全故障存在
+        for k in range(19, len(list_actual)-1):
+            if abs(list_actual[k]-list_actual[k+1]) <= 0.1:
                 # 阈值参考具体参数
-                Stuck_fault = 1
+                continue
+            else:
+                Stuck_fault = 0
         if Stuck_fault:  # 卡死故障/完全故障
             return 1
         a, b = Least_Square_Method(list_estimate, list_actual)
-        if abs(a-1) <= 0.01:  # 之所以设置这个大小是忽略最小二乘法拟合时的误差与本身就存在的预测值的误差
-            if b > 0.01:
+        if abs(a-1) >= 0.01:  # 之所以设置这个大小是忽略最小二乘法拟合时的误差与本身就存在的预测值的误差
+            if abs(b) > 0.01:
                 return 2
             if a-1 > 0:
                 return 3
@@ -114,13 +114,13 @@ def fault(list_estimate, list_actual, snesor_id):
         fault_str = '完全故障'
         # print('完全故障')
     elif fault_type == 2:
-        fault_str = '固定偏差'
+        fault_str = '固定偏差故障'
         # print('固定偏差')
     elif fault_type == 3:
-        fault_str = '恒增益'
+        fault_str = '恒增益故障'
         # print('恒增益')
     else:
-        fault_str = '精度下降'
+        fault_str = '精度下降故障'
         # print('精度下降')
     return fault_str
 
@@ -128,7 +128,7 @@ def fault(list_estimate, list_actual, snesor_id):
 if __name__ == "__main__":
     result, actual = pre('data&model/sensor_test_1.csv')
     # draw_picture(result, actuall)  # 绘制原始数据图像
-    snesor_id = 0
+    snesor_id = 3
     # l1 = result[:, 0].tolist()
     # l2 = actuall[:, 0].tolist()
     print(fault(result, actual, snesor_id))

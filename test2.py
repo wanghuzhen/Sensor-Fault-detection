@@ -32,15 +32,17 @@ def get_data(data_path=''):
 def create_model(X_shape):
 
     model = keras.models.Sequential()
-    model.add(tf.keras.layers.LSTM(64, input_shape=X_shape,
+    model.add(tf.keras.layers.LSTM(24, input_shape=X_shape,
                                    return_sequences=True,
-                                   return_state=False,
-                                   kernel_initializer=tf.ones_initializer(),
-                                   recurrent_initializer=tf.ones_initializer))
+                                   return_state=False))
+    model.add(tf.keras.layers.LSTM(24, return_sequences=True,
+                                   return_state=False))
+    # model.add(tf.keras.layers.LSTM(13, return_sequences=True,
+    #                                return_state=False))
+    # model.add(tf.keras.layers.LSTM(13, return_sequences=True,
+    #                                return_state=False))
     model.add(tf.keras.layers.LSTM(4, return_sequences=False,
-                                   return_state=False,
-                                   kernel_initializer=tf.ones_initializer(),
-                                   recurrent_initializer=tf.ones_initializer))
+                                   return_state=False))
     # print(model.summary())
     return model
 
@@ -57,10 +59,6 @@ def create_model(X_shape):
 # 下面函数没有使用上面的方法
 def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
     # 获取训练集shape
-    X_train_scaled = X_train_scaled.reshape(
-        X_train_scaled.shape[0], 1, X_train_scaled.shape[1])
-    X_test_scaled = X_test_scaled.reshape(
-        X_test_scaled.shape[0], 1, X_test_scaled.shape[1])
     X_shape = X_train_scaled.shape[1:]
     # print(X_shape)
     if os.path.exists('LstmRnn_model.h5'):
@@ -76,7 +74,7 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
         model = create_model(X_shape)
         # lr为学习率，上次设置为0.01
         model.compile(optimizer=tf.keras.optimizers.Adam(
-            lr=0.001), loss='mse', metrics=["accuracy"])
+            lr=0.0001), loss='mse', metrics=["accuracy"])
         history = model.fit(X_train_scaled, y_train, validation_data=(
             X_test_scaled, y_test), epochs=epoch)
         # 保存训练模型的权重和偏置
@@ -90,6 +88,11 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
 # 训练后的模型进行预测和评估，返回值是预测值和实际值的差值
 def train_predict_evalute():
     X_train_scaled, y_train, X_test_scaled, y_test = get_data()
+    X_train_scaled = X_train_scaled.reshape(
+        X_train_scaled.shape[0], 1, X_train_scaled.shape[1])
+    X_test_scaled = X_test_scaled.reshape(
+        X_test_scaled.shape[0], 1, X_test_scaled.shape[1])
+    print(X_train_scaled.shape)
     history = model_train(5, X_train_scaled, y_train, X_test_scaled, y_test)
     model = tf.keras.models.load_model('LstmRnn_model.h5')
     l1 = np.array(model.predict(X_test_scaled))
@@ -128,7 +131,7 @@ def draw_picture_DNN(res, act, sensor_type):
 if __name__ == '__main__':
     result = train_predict_evalute()
     # result, actuall = pre_DNN('data&model/sensor_test_1.csv')
-    print(result.tolist())
+    print(result[0:50].tolist())
     # print('======================')
     # print(actuall.tolist())
     # plt.plot(result[:, 0].tolist())

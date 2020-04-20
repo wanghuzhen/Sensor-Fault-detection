@@ -112,12 +112,12 @@ def pre(data_path):
 
 
 # 显示数据图像
-def draw_picture(res, act, fault_type='无故障'):
+def draw_picture(res, act, sensor_type):
     for i in range(4):
         res = result[:, i].tolist()
         act = actuall[:, i].tolist()
         plt.figure('Sensor'+str(i+1))
-        plt.title('Sensor'+str(i+1)+fault_type)
+        plt.title('Sensor'+str(i+1)+sensor_type['Sensor'+str(i+1)])
         plt.rcParams['font.sans-serif'] = ['SimHei']
         plt.plot(res, label='估计值--平均值：'+str(round(sum(res)/len(res), 4)))
         plt.plot(act, label='实际值--平均值：'+str(round(sum(act)/len(act), 4)))

@@ -31,24 +31,14 @@ def get_data(data_path=''):
 # 创建模型
 def create_model(X_shape):
     model = keras.models.Sequential()
-    model.add(keras.layers.Dense(9, input_shape=X_shape, activation='relu'))
-    model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.Dense(12, activation='relu'))
-    model.add(keras.layers.BatchNormalization())
-    # model.add(keras.layers.AlphaDropout(rate=0.3))
-    model.add(keras.layers.Dense(13, activation='relu'))
-    model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.Dense(13, activation='relu'))
-    model.add(keras.layers.BatchNormalization())
-    # model.add(keras.layers.AlphaDropout(rate=0.3))
-    model.add(keras.layers.Dense(13, activation='relu'))
-    model.add(keras.layers.BatchNormalization())
-    # model.add(keras.layers.Dense(13,activation = 'relu'))
-    # model.add(keras.layers.BatchNormalization())
-    # model.add(keras.layers.Dense(13,activation = 'relu'))
-    # model.add(keras.layers.BatchNormalization())
-    model.add(keras.layers.Dense(4, activation='relu'))
-    model.add(keras.layers.BatchNormalization())
+    model.add(tf.keras.layers.LSTM(64, return_sequences=False,
+                                   return_state=False,
+                                   kernel_initializer=tf.ones_initializer(),
+                                   recurrent_initializer=tf.ones_initializer))
+    model.add(tf.keras.layers.LSTM(4, return_sequences=False,
+                                   return_state=False,
+                                   kernel_initializer=tf.ones_initializer(),
+                                   recurrent_initializer=tf.ones_initializer))
     # print(model.summary())
     return model
 

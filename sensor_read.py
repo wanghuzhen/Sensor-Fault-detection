@@ -35,13 +35,13 @@ def read_testdata(path):  # 读取测试集数据
 
 if __name__ == '__main__':
     (X_train, y_train), (X_test, y_test) = read_data()
-    x, y = read_testdata('data&model/sensor_test.csv')
+    x, y = read_testdata('data&model/sensor_test_1.csv')
     # X_train = np.array(X_train)
     # Y_train = np.array(Y_train)
-    print(X_test)
+    print(X_test.shape[1:])
     # print(X_train)
     # print(X_test.shape)
-    print('=================')
-    print(x)
+    # print('=================')
+    # print(x)
     # print(y_test.shape)
     # print(type(X_train[1][1]))

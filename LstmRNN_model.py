@@ -107,8 +107,12 @@ def train_predict_evalute():
 
 
 # 预测测试集，使用的数据集是正式有故障的数据集
-def pre_DNN(data_path):
+def pre_LSTMRNN(data_path):
     x_test_scaled, y_test = get_data(data_path)
+    x_test_scaled = x_test_scaled.reshape(
+        x_test_scaled.shape[0], 1, x_test_scaled.shape[1])
+    y_test = y_test.reshape(
+        y_test.shape[0], 1, y_test.shape[1])
     model = tf.keras.models.load_model('data&model/LstmRnn_model.h5')
     l1 = np.array(model.predict(x_test_scaled))
     l1 = l1.reshape(l1.shape[0], l1.shape[2])
@@ -119,7 +123,7 @@ def pre_DNN(data_path):
 
 
 # 显示数据图像
-def draw_picture_DNN(res, act, sensor_type):
+def draw_picture_LSTMRNN(res, act, sensor_type):
     for i in range(4):
         res = res[:, i].tolist()
         act = act[:, i].tolist()
@@ -137,9 +141,9 @@ def draw_picture_DNN(res, act, sensor_type):
 
 if __name__ == '__main__':
     # result = train_predict_evalute()
-    result, actual = pre_DNN('data&model/sensor_test_1.csv')
-    print(result[:, 0].tolist())
+    result, actual = pre_LSTMRNN('data&model/sensor_test_1.csv')
+    print(result.tolist())
     # print('======================')
-    print(actual[:, 0].tolist())
+    print(actual.tolist())
     # plt.plot(result[:, 0].tolist())
     # plt.show()

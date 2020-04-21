@@ -1,10 +1,11 @@
 # @File    :   snesor_fault.py
-# @Version :   2.3
+# @Version :   3.3
 # @Author  :   Wang Huzhen
 # @Email   :   2327253081@qq.com
 # @Time    :   2020/04/09 09:45:06
 import numpy as np
 from DNN_model import pre_DNN, draw_picture_DNN
+from LstmRNN_model import pre_LSTMRNN, draw_picture_LSTMRNN
 import random
 
 
@@ -126,10 +127,19 @@ def fault(list_estimate, list_actual, snesor_id):
 
 
 if __name__ == "__main__":
-    result, actual = pre_DNN('data&model/sensor_test_1.csv')
+    # result, actual = pre_DNN('data&model/sensor_test_1.csv')
+    result, actual = pre_LSTMRNN('data&model/sensor_test_1.csv')
     sensor_type = {'Sensor1': '无故障', 'Sensor2': '无故障',
                    'Sensor3': '无故障', 'Sensor4': '无故障'}
     # draw_picture_DNN(result, actual, sensor_type)  # 绘制原始数据图像
+    # snesor_id = 3
+    # l1 = result[:, 0].tolist()
+    # l2 = actuall[:, 0].tolist()
+    # print(fault(result, actual, 0))  # 完全故障
+    # print(fault(result, actual, 1))  # 恒增益故障
+    # print(fault(result, actual, 2))  # 固定偏差故障
+    # print(fault(result, actual, 3))  # 精度下降故障
+    # draw_picture_LSTMRNN(result, actual, sensor_type)  # 绘制原始数据图像
     # snesor_id = 3
     # l1 = result[:, 0].tolist()
     # l2 = actuall[:, 0].tolist()
@@ -141,5 +151,6 @@ if __name__ == "__main__":
     sensor_type['Sensor2'] = fault(result, actual, 1)
     sensor_type['Sensor3'] = fault(result, actual, 2)
     sensor_type['Sensor4'] = fault(result, actual, 3)
-    # draw_picture_DNN(result, actual, sensor_type)  # 绘制原始数据图像
+    # draw_picture_DNN(result, actual, sensor_type)  # 绘制检测数据图像
+    # draw_picture_LSTMRNN(result, actual, sensor_type)  # 绘制检测数据图像
     print(sensor_type)

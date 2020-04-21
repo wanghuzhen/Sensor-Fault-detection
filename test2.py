@@ -35,14 +35,15 @@ def create_model(X_shape):
     model.add(tf.keras.layers.LSTM(24, input_shape=X_shape,
                                    return_sequences=True,
                                    return_state=False))
-    model.add(tf.keras.layers.LSTM(24, return_sequences=True,
+    model.add(tf.keras.layers.LSTM(13, return_sequences=True,
                                    return_state=False))
     # model.add(tf.keras.layers.LSTM(13, return_sequences=True,
     #                                return_state=False))
     # model.add(tf.keras.layers.LSTM(13, return_sequences=True,
     #                                return_state=False))
-    model.add(tf.keras.layers.LSTM(4, return_sequences=False,
-                                   return_state=False))
+    # model.add(tf.keras.layers.LSTM(4, return_sequences=False,
+    #                                return_state=False))
+    model.add(tf.keras.layers.Dense(4, activation='linear'))
     # print(model.summary())
     return model
 
@@ -65,7 +66,7 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
         restored_model = tf.keras.models.load_model(
             'LstmRnn_model.h5')
         history = restored_model.fit(X_train_scaled, y_train, validation_data=(
-            X_test_scaled, y_test), epochs=epoch)
+            X_test_scaled, y_test), epochs=epoch, batch_size=64)
         # 保存训练模型的权重和偏置
         restored_model.save('LstmRnn_model.h5')
         # 删除模型
@@ -74,9 +75,9 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
         model = create_model(X_shape)
         # lr为学习率，上次设置为0.01
         model.compile(optimizer=tf.keras.optimizers.Adam(
-            lr=0.0001), loss='mse', metrics=["accuracy"])
+            lr=0.001), loss='mse', metrics=["accuracy"])
         history = model.fit(X_train_scaled, y_train, validation_data=(
-            X_test_scaled, y_test), epochs=epoch)
+            X_test_scaled, y_test), epochs=epoch, batch_size=64)
         # 保存训练模型的权重和偏置
         model.save('LstmRnn_model.h5')
         # 删除模型
@@ -92,8 +93,12 @@ def train_predict_evalute():
         X_train_scaled.shape[0], 1, X_train_scaled.shape[1])
     X_test_scaled = X_test_scaled.reshape(
         X_test_scaled.shape[0], 1, X_test_scaled.shape[1])
+    y_train = y_train.reshape(
+        y_train.shape[0], 1, y_train.shape[1])
+    y_test = y_test.reshape(
+        y_test.shape[0], 1, y_test.shape[1])
     print(X_train_scaled.shape)
-    history = model_train(5, X_train_scaled, y_train, X_test_scaled, y_test)
+    history = model_train(8, X_train_scaled, y_train, X_test_scaled, y_test)
     model = tf.keras.models.load_model('LstmRnn_model.h5')
     l1 = np.array(model.predict(X_test_scaled))
     l2 = np.array(y_test)
@@ -104,6 +109,10 @@ def train_predict_evalute():
 # 预测测试集，使用的数据集是正式有故障的数据集
 def pre_DNN(data_path):
     x_test_scaled, y_test = get_data(data_path)
+    x_test_scaled = x_test_scaled.reshape(
+        x_test_scaled.shape[0], 1, x_test_scaled.shape[1])
+    y_test = y_test.reshape(
+        y_test.shape[0], 1, y_test.shape[1])
     model = tf.keras.models.load_model('LstmRnn_model.h5')
     l1 = np.array(model.predict(x_test_scaled))
     l2 = np.array(y_test)
@@ -129,9 +138,9 @@ def draw_picture_DNN(res, act, sensor_type):
 
 
 if __name__ == '__main__':
-    result = train_predict_evalute()
-    # result, actuall = pre_DNN('data&model/sensor_test_1.csv')
-    print(result[0:50].tolist())
+    # result = train_predict_evalute()
+    result, actuall = pre_DNN('data&model/sensor_test_1.csv')
+    print(result.tolist())
     # print('======================')
     # print(actuall.tolist())
     # plt.plot(result[:, 0].tolist())

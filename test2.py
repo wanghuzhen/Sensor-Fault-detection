@@ -115,7 +115,9 @@ def pre_DNN(data_path):
         y_test.shape[0], 1, y_test.shape[1])
     model = tf.keras.models.load_model('LstmRnn_model.h5')
     l1 = np.array(model.predict(x_test_scaled))
+    l1 = l1.reshape(l1.shape[0], l1.shape[2])
     l2 = np.array(y_test)
+    l2 = l2.reshape(l2.shape[0], l2.shape[2])
     del model
     return l1, l2
 
@@ -140,8 +142,8 @@ def draw_picture_DNN(res, act, sensor_type):
 if __name__ == '__main__':
     # result = train_predict_evalute()
     result, actuall = pre_DNN('data&model/sensor_test_1.csv')
-    print(result.tolist())
+    print(result[:, 0].tolist())
     # print('======================')
-    # print(actuall.tolist())
+    print(actuall[:, 0].tolist())
     # plt.plot(result[:, 0].tolist())
     # plt.show()

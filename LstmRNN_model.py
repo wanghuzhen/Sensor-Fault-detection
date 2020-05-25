@@ -123,10 +123,10 @@ def pre_LSTMRNN(data_path):
 
 
 # 显示数据图像
-def draw_picture_LSTMRNN(res, act, sensor_type):
+def draw_picture_LSTMRNN(res_array, act_array, sensor_type):
     for i in range(4):
-        res = res[:, i].tolist()
-        act = act[:, i].tolist()
+        res = res_array[:, i].tolist()
+        act = act_array[:, i].tolist()
         plt.figure('Sensor'+str(i+1))
         plt.title('Sensor'+str(i+1)+sensor_type['Sensor'+str(i+1)])
         plt.rcParams['font.sans-serif'] = ['SimHei']
@@ -135,13 +135,13 @@ def draw_picture_LSTMRNN(res, act, sensor_type):
         plt.legend(loc='best')
         plt.xlabel('time')
         plt.ylabel('angel_rate')
-        plt.savefig('Sensor'+str(i+1)+'.png')
+        plt.savefig('run_result/Sensor-lstm'+str(i+1)+sensor_type['Sensor'+str(i+1)]+'.png')
     plt.show()
 
 
 if __name__ == '__main__':
     # result = train_predict_evalute()
-    result, actual = pre_LSTMRNN('data&model/sensor_test_1.csv')
+    result, actual = pre_LSTMRNN('data&model/sensor_test_3.csv')
     print(result.tolist())
     # print('======================')
     print(actual.tolist())

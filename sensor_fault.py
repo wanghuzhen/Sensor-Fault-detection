@@ -60,7 +60,7 @@ def Sensor_Fault_Detection(list_estimate, list_actual, max_dvalue):
             return 1
         a, b = Least_Square_Method(list_estimate, list_actual)
         if abs(a-1) >= 0.01:  # 之所以设置这个大小是忽略最小二乘法拟合时的误差与本身就存在的预测值的误差
-            if abs(b) > 0.01:
+            if abs(b) > 0.02:
                 return 2
             if a-1 > 0:
                 return 3
@@ -88,7 +88,7 @@ def fault_insertion(actual_value):
     # 插入恒增益或精度下降故障，muti[1, 1]的值大于1为传感器2插入恒增益，muti[3, 3]小于1为传感器4插入精度下降
     muti = np.eye(4, dtype=float)
     muti[1, 1] = 2.
-    muti[3, 3] = 0.8
+    muti[3, 3] = 0.6
     actual_value = np.matmul(actual_value, muti)
     # 插入固定偏差故障
     bias = np.zeros((49, 4))
@@ -128,7 +128,7 @@ def fault(list_estimate, list_actual, snesor_id):
 
 if __name__ == "__main__":
     # result, actual = pre_DNN('data&model/sensor_test_1.csv')
-    result, actual = pre_LSTMRNN('data&model/sensor_test_1.csv')
+    result, actual = pre_LSTMRNN('data&model/sensor_test_2.csv')
     sensor_type = {'Sensor1': '无故障', 'Sensor2': '无故障',
                    'Sensor3': '无故障', 'Sensor4': '无故障'}
     # draw_picture_DNN(result, actual, sensor_type)  # 绘制原始数据图像
@@ -151,6 +151,7 @@ if __name__ == "__main__":
     sensor_type['Sensor2'] = fault(result, actual, 1)
     sensor_type['Sensor3'] = fault(result, actual, 2)
     sensor_type['Sensor4'] = fault(result, actual, 3)
+    actual = fault_insertion(actual)
     # draw_picture_DNN(result, actual, sensor_type)  # 绘制检测数据图像
-    # draw_picture_LSTMRNN(result, actual, sensor_type)  # 绘制检测数据图像
-    print(sensor_type)
+    draw_picture_LSTMRNN(result, actual, sensor_type)  # 绘制检测数据图像
+    # print(sensor_type)

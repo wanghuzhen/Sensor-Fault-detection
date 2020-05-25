@@ -2,7 +2,6 @@ from sensor_read import read_data
  
 from sklearn import preprocessing
 import tensorflow
-import tensorflow.compat.v1 as tf
 tf.disable_eager_execution()
 import numpy as np
  

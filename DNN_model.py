@@ -93,12 +93,12 @@ def model_train(epoch, X_train_scaled, y_train, X_test_scaled, y_test):
 # 训练后的模型进行预测和评估，返回值是预测值和实际值的差值
 def train_predict_evalute():
     X_train_scaled, y_train, X_test_scaled, y_test = get_data()
-    # history = model_train(5, X_train_scaled, y_train, X_test_scaled, y_test)
+    history = model_train(5, X_train_scaled, y_train, X_test_scaled, y_test)
     model = tf.keras.models.load_model('data&model/Dnn_model.h5')
     l1 = np.array(model.predict(X_test_scaled))
     l2 = np.array(y_test)
     del model
-    return (l1-l2)
+    return history
 
 
 # 预测测试集，使用的数据集是正式有故障的数据集
@@ -112,10 +112,10 @@ def pre_DNN(data_path):
 
 
 # 显示数据图像
-def draw_picture_DNN(res, act, sensor_type):
+def draw_picture_DNN(res_array, act_array, sensor_type):
     for i in range(4):
-        res = res[:, i].tolist()
-        act = act[:, i].tolist()
+        res = res_array[:, i].tolist()
+        act = act_array[:, i].tolist()
         plt.figure('Sensor'+str(i+1))
         plt.title('Sensor'+str(i+1)+sensor_type['Sensor'+str(i+1)])
         plt.rcParams['font.sans-serif'] = ['SimHei']
@@ -124,13 +124,13 @@ def draw_picture_DNN(res, act, sensor_type):
         plt.legend(loc='best')
         plt.xlabel('time')
         plt.ylabel('angel_rate')
-        plt.savefig('Sensor'+str(i+1)+'.png')
+        plt.savefig('run_result/Sensor-DNN'+str(i+1)+sensor_type['Sensor'+str(i+1)]+'.png')
     plt.show()
 
 
 if __name__ == '__main__':
-    # result = train_predict_evalute()
-    result, actuall = pre_DNN('data&model/sensor_test_1.csv')
+    # history = train_predict_evalute()
+    result, actuall = pre_DNN('data&model/sensor_test_3.csv')
     print(result.tolist())
     print('======================')
     print(actuall.tolist())
